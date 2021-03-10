@@ -9,14 +9,6 @@ on:
       ci/*,
       docs/*,
     ]
-  pull_request:
-    branches: [
-      main,
-      develop,
-      feature/*,
-      ci/*,
-      docs/*,
-    ]
 
 jobs:
   build:
