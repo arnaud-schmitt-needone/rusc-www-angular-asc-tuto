@@ -8,6 +8,7 @@ on:
       feature/*,
       ci/*,
       docs/*,
+      fix/*
     ]
 
 jobs:
