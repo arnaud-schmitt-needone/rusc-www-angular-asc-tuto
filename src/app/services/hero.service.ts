@@ -14,13 +14,15 @@ export class HeroService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
+  private apiRoute: string = '/api/heroes';
+
   constructor(
     private http: HttpClient,
     private messageService: MessageService
   ) { }
 
   public getHeroes(): Observable<Hero[]> {
-    let heroes = this.http.get<Hero[]>('api/heroes')
+    const heroes = this.http.get<Hero[]>(this.apiRoute)
       .pipe(
         tap(_ => this.log('fetched heroes')),
         catchError(this.handleError<Hero[]>('getHeroes', []))
@@ -29,7 +31,7 @@ export class HeroService {
   }
 
   public getHero(id: string): Observable<Hero> {
-    let hero = this.http.get<Hero>(`/api/heroes/${id}`)
+    const hero = this.http.get<Hero>(`${this.apiRoute}/${id}`)
       .pipe(
         tap(_ => this.log(`fetched hero id=${id}`)),
         catchError(this.handleError<Hero>('getHero'))
@@ -38,7 +40,7 @@ export class HeroService {
   }
 
   public addHero(hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>('/api/heroes', hero, this.httpOptions)
+    return this.http.post<Hero>(this.apiRoute, hero, this.httpOptions)
       .pipe(
         tap(_ => this.log(`Added hero name=${hero.name}`)),
         catchError(this.handleError<Hero>('addHero'))
@@ -47,7 +49,7 @@ export class HeroService {
 
   /** PUT: update the hero on the server */
   public updateHero(hero?: Hero): Observable<Hero> {
-    return this.http.put<Hero>('/api/heroes', hero, this.httpOptions)
+    return this.http.put<Hero>(this.apiRoute, hero, this.httpOptions)
       .pipe(
         tap(_ => this.log(`updated hero id=${(hero || {id: -1}).id}`)),
         catchError(this.handleError<Hero>('updateHero'))
@@ -55,7 +57,7 @@ export class HeroService {
   }
 
   public delete(id: number): Observable<Hero> {
-    return this.http.delete<Hero>(`/api/heroes/${id}`, this.httpOptions)
+    return this.http.delete<Hero>(`${this.apiRoute}/${id}`, this.httpOptions)
       .pipe(
         tap(_ => this.log(`deleted hero id=${id}`)),
         catchError(this.handleError<Hero>('deleteHero'))
@@ -68,7 +70,7 @@ export class HeroService {
       // if not search term, return empty hero array.
       return of([]);
     }
-    return this.http.get<Hero[]>(`/api/heroes?name=${term}`).pipe(
+    return this.http.get<Hero[]>(`${this.apiRoute}?name=${term}`).pipe(
       tap(x => x.length ?
         this.log(`found heroes matching "${term}"`) :
         this.log(`no heroes matching "${term}"`)),
@@ -82,7 +84,7 @@ export class HeroService {
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
-  private handleError<T>(operation = 'operation', result?: T) {
+  private handleError<T>(operation = 'operation', result?: T): any{
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure

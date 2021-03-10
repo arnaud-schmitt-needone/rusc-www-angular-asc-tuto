@@ -24,14 +24,14 @@ export class HeroesComponent implements OnInit {
 
   public getHeroes(): void {
     this.heroService.getHeroes()
-      .subscribe((heroes: Hero[]) => {this.heroes = heroes});
+      .subscribe((heroes: Hero[]) => { this.heroes = heroes; });
   }
 
   public add(name: string): void {
     name = name.trim();
     if (name) {
       this.heroService.addHero({ name } as Hero)
-      .subscribe((hero: Hero) => {this.heroes.push(hero)})
+      .subscribe((hero: Hero) => { this.heroes.push(hero); });
     } else {
       this.messageService.add('Cannot add hero with no name');
       return;

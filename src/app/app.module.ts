@@ -12,6 +12,8 @@ import { HeroDetailComponent } from './components/hero-detail/hero-detail.compon
 import { MessagesComponent } from './components/messages/messages.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { HeroSearchComponent } from './components/hero-search/hero-search.component';
+import { HeroService } from './services/hero.service';
+import { MessageService } from './services/message.service';
 
 mockServer();
 
@@ -31,6 +33,8 @@ mockServer();
     HttpClientModule
   ],
   providers: [
+    HeroService,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })
