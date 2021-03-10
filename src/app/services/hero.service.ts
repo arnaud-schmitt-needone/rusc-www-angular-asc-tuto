@@ -14,7 +14,7 @@ export class HeroService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  private apiRoute: string = '/api/heroes';
+  private apiRoute = '/api/heroes';
 
   constructor(
     private http: HttpClient,
