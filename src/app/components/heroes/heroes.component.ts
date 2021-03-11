@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GetManyHeroesDto } from 'src/app/models/get-many-heroes.dto';
 import { Hero } from 'src/app/models/hero';
 import { HeroService } from 'src/app/services/hero.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -24,7 +25,7 @@ export class HeroesComponent implements OnInit {
 
   public getHeroes(): void {
     this.heroService.getHeroes()
-      .subscribe((heroes: Hero[]) => { this.heroes = heroes; });
+      .subscribe((heroes: GetManyHeroesDto) => { this.heroes = heroes.heroes; });
   }
 
   public add(name: string): void {
@@ -38,9 +39,9 @@ export class HeroesComponent implements OnInit {
     }
   }
 
-  public delete(id: number): void {
+  public delete(id: string): void {
     this.heroService.delete(id)
-      .subscribe();
+      .subscribe(_ => this.getHeroes());
 
   }
 }

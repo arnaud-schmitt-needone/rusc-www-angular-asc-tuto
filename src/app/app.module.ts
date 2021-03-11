@@ -15,7 +15,7 @@ import { HeroSearchComponent } from './components/hero-search/hero-search.compon
 import { HeroService } from './services/hero.service';
 import { MessageService } from './services/message.service';
 
-mockServer();
+// mockServer();
 
 @NgModule({
   declarations: [

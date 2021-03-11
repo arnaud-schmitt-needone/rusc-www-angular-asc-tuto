@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { Hero } from '../models/hero';
 import { MessageService } from './message.service';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { GetManyHeroesDto } from '../models/get-many-heroes.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +16,18 @@ export class HeroService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  private apiRoute = '/api/heroes';
+  private apiRoute = `${environment.apiUrl}${environment.heroesEndpoint}`;
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService
   ) { }
 
-  public getHeroes(): Observable<Hero[]> {
-    const heroes = this.http.get<Hero[]>(this.apiRoute)
+  public getHeroes(): Observable<GetManyHeroesDto> {
+    const heroes = this.http.get<GetManyHeroesDto>(this.apiRoute)
       .pipe(
         tap(_ => this.log('fetched heroes')),
-        catchError(this.handleError<Hero[]>('getHeroes', []))
+        catchError(this.handleError<GetManyHeroesDto>('getHeroes'))
       );
     return heroes;
   }
@@ -49,14 +51,15 @@ export class HeroService {
 
   /** PUT: update the hero on the server */
   public updateHero(hero?: Hero): Observable<Hero> {
-    return this.http.put<Hero>(this.apiRoute, hero, this.httpOptions)
+    const route = `${this.apiRoute}/${hero?.id}`
+    return this.http.put<Hero>(route, { name: hero?.name }, this.httpOptions)
       .pipe(
         tap(_ => this.log(`updated hero id=${(hero || {id: -1}).id}`)),
         catchError(this.handleError<Hero>('updateHero'))
     );
   }
 
-  public delete(id: number): Observable<Hero> {
+  public delete(id: string): Observable<Hero> {
     return this.http.delete<Hero>(`${this.apiRoute}/${id}`, this.httpOptions)
       .pipe(
         tap(_ => this.log(`deleted hero id=${id}`)),
@@ -68,10 +71,11 @@ export class HeroService {
   searchHeroes(term: string): Observable<Hero[]> {
     if (!term.trim()) {
       // if not search term, return empty hero array.
-      return of([]);
+      return of();
     }
-    return this.http.get<Hero[]>(`${this.apiRoute}?name=${term}`).pipe(
-      tap(x => x.length ?
+    return this.http.get<GetManyHeroesDto>(`${this.apiRoute}?name=${term}`).pipe(
+      map((result: GetManyHeroesDto) => result.heroes),
+      tap(heroes => heroes.length ?
         this.log(`found heroes matching "${term}"`) :
         this.log(`no heroes matching "${term}"`)),
       catchError(this.handleError<Hero[]>('searchHeroes', []))
