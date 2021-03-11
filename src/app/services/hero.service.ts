@@ -51,7 +51,7 @@ export class HeroService {
 
   /** PUT: update the hero on the server */
   public updateHero(hero?: Hero): Observable<Hero> {
-    const route = `${this.apiRoute}/${hero?.id}`
+    const route = `${this.apiRoute}/${hero?.id}`;
     return this.http.put<Hero>(route, { name: hero?.name }, this.httpOptions)
       .pipe(
         tap(_ => this.log(`updated hero id=${(hero || {id: -1}).id}`)),
