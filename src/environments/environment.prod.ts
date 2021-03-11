@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:4000/api',
+  apiUrl: 'https://rusc-back-nestjs-asc-tuto.herokuapp.com/api',
   heroesEndpoint: '/heroes'
 };
